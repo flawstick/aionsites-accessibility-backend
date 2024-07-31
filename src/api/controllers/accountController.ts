@@ -19,7 +19,6 @@ export const getAccount = async (req: Request, res: Response) => {
   }
 };
 
-
 export const googleAuth = async (req: Request, res: Response) => {
   const { profile } = req.body;
   const { email, name, given_name, family_name, picture, at_hash } = profile;

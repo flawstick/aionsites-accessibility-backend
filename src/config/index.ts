@@ -11,7 +11,6 @@ export const config = {
       process.env.MONGODB_ADMIN_PASSWORD
     }@${process.env.MONGODB_URI || "localhost:27017"}` || "weaviate",
   mongoOptions: { dbName: process.env.MONGODB_DB_NAME || "weaviate" },
-  weaviateUri: process.env.WEAVIATE_URI || "http://localhost:8080",
 };
 
 cloudinary.config({

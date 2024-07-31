@@ -1,10 +1,6 @@
 import express from "express";
 import cors from "cors";
 import authRouter from "@/api/routes/authRoutes";
-import feedRouter from "@/api/routes/feedRoutes";
-import orderRouter from "@/api/routes/orderRoutes";
-import restaurantRouter from "@/api/routes/restaurantRoutes";
-import menuRouter from "@/api/routes/menuRoutes";
 import accountRouter from "@/api/routes/accountRoutes";
 import uploadRouter from "@/api/routes/uploadRoutes";
 import { loggerMiddleware, verifyJsonWebToken } from "@/api/middleware";
@@ -29,10 +25,6 @@ app.use(verifyJsonWebToken);
 
 // Routes
 app.use("/auth", authRouter);
-app.use("/feed", feedRouter);
-app.use("/orders", orderRouter);
-app.use("/restaurants", restaurantRouter);
-app.use("/menu", menuRouter);
 app.use("/accounts", accountRouter);
 app.use("/upload", uploadRouter);
 

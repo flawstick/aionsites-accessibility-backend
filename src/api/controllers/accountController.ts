@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import { JwtPayload, verify, sign } from "jsonwebtoken";
 import { config } from "@/config";
-import { log } from "@/utils/log";
 import AccountModel from "@/models/account";
-import RestaurantModel from "@/models/restaurant";
 
 export const getAccount = async (req: Request, res: Response) => {
   const { jwt } = req.params;
@@ -21,21 +19,6 @@ export const getAccount = async (req: Request, res: Response) => {
   }
 };
 
-export async function getAccountRestaurants(req: Request, res: Response) {
-  try {
-    const { accountId } = req.params;
-    const userId = accountId;
-
-    if (req.body.user.userId !== userId)
-      return res.status(403).json({ message: "Forbidden" });
-
-    const restaurants = await RestaurantModel.find({ members: userId });
-    res.status(200).json(restaurants);
-  } catch (error) {
-    log.error("Failed to get account restaurants:", error as Error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
 
 export const googleAuth = async (req: Request, res: Response) => {
   const { profile } = req.body;

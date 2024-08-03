@@ -1,23 +1,30 @@
 import { model, Schema, Document, Model } from "mongoose";
 
+interface ICard {
+  cardNumber: string;
+  cardHolderName: string;
+  expirationDate: Date;
+  cvv: string;
+  cardType: string;
+}
+
 interface IAccessiBeLicenseBase {
-  subscriptionId: string;
   companyName: string;
   addresses: string[];
-  location: {
+  location?: {
     longitude: number;
     latitude: number;
   };
   domain: string;
-  CName: string;
+  CName?: string;
   website: string;
   contactPersonName: string;
-  phoneNumber: string;
-  licenseKey: string;
-  widgetInstallationProcedureType: "cms" | "manual";
-  expirationDate: Date;
+  phoneNumber?: string;
+  licenseKey?: string;
+  widgetInstallationProcedureType?: "cms" | "manual";
   active: boolean;
-  subscriptionCard: any;
+  expirationDate: Date;
+  subscriptionCard: ICard;
   subscriptionType: string;
   subscriptionTier: string;
   subscriptionStatus: string;
@@ -29,102 +36,46 @@ interface IAccessiBeLicenseBase {
   subscriptionRenewalPeriod: string;
   subscriptionRenewalPeriodUnit: string;
   subscriptionRenewalPeriodFrequency: number;
-  subscriptionRenewalPeriodFrequencyUnit: string;
-  subscriptionRenewalPeriodFrequencyOffset: number;
-  subscriptionRenewalPeriodFrequencyOffsetUnit: string;
-  subscriptionRenewalPeriodFrequencyOffsetDirection: string;
-  subscriptionRenewalPeriodFrequencyOffsetDirectionUnit: string;
-  subscriptionRenewalPeriodFrequencyOffsetDirectionValue: number;
 }
 
 interface IAccessiBeLicense extends IAccessiBeLicenseBase, Document {}
 export interface IAccessiBeLicenseLean extends IAccessiBeLicenseBase {}
 
-const accessiBeLicenseSchema = new Schema<IAccessiBeLicense>(
-  {
-    subscriptionId: { type: String, required: true, unique: true },
-    companyName: { type: String, required: true, unique: false },
-    addresses: { type: [String], required: true, unique: false },
-    location: {
-      longitude: { type: Number, required: true, unique: false },
-      latitude: { type: Number, required: true, unique: false },
-    },
-    domain: { type: String, required: true, unique: true },
-    CName: { type: String, required: true, unique: true },
-    widgetInstallationProcedureType: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    website: { type: String, required: true, unique: true },
-    CEOName: { type: String, required: true, unique: false },
-    contactPersonName: { type: String, required: true, unique: false },
-    phoneNumber: { type: String, required: true, unique: false },
-    licenseKey: { type: String, required: true, unique: true },
-    expirationDate: { type: Date, required: true, unique: false },
-    active: { type: Boolean, required: true, unique: false },
-    subscriptionCard: {
-      type: Schema.Types.Mixed,
-      required: true,
-      unique: false,
-    },
-    subscriptionType: { type: String, required: true, unique: false },
-    subscriptionTier: { type: String, required: true, unique: false },
-    subscriptionStatus: { type: String, required: true, unique: false },
-    subscriptionStartDate: { type: Date, required: true, unique: false },
-    subscriptionEndDate: { type: Date, required: true, unique: false },
-    subscriptionRenewalDate: { type: Date, required: true, unique: false },
-    subscriptionRenewalPrice: { type: Number, required: true, unique: false },
-    subscriptionRenewalCurrency: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriod: { type: String, required: true, unique: false },
-    subscriptionRenewalPeriodUnit: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequency: {
-      type: Number,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyUnit: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyOffset: {
-      type: Number,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyOffsetUnit: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyOffsetDirection: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyOffsetDirectionUnit: {
-      type: String,
-      required: true,
-      unique: false,
-    },
-    subscriptionRenewalPeriodFrequencyOffsetDirectionValue: {
-      type: Number,
-      required: true,
-      unique: false,
-    },
+const AccessiBeLicenseSchema = new Schema<IAccessiBeLicense>({
+  companyName: { type: String, required: true },
+  addresses: { type: [String], required: true },
+  location: {
+    longitude: { type: Number },
+    latitude: { type: Number },
   },
-  { timestamps: true, strict: false },
-);
+  domain: { type: String, required: true },
+  CName: { type: String },
+  website: { type: String, required: true },
+  contactPersonName: { type: String, required: true },
+  phoneNumber: { type: String },
+  licenseKey: { type: String },
+  widgetInstallationProcedureType: { type: String },
+  active: { type: Boolean, required: true },
+  expirationDate: { type: Date, required: true },
+  subscriptionCard: {
+    cardNumber: { type: String, required: true },
+    cardHolderName: { type: String, required: true },
+    expirationDate: { type: Date, required: true },
+    cvv: { type: String, required: true },
+    cardType: { type: String, required: true },
+  },
+  subscriptionType: { type: String, required: true },
+  subscriptionTier: { type: String, required: true },
+  subscriptionStatus: { type: String, required: true },
+  subscriptionStartDate: { type: Date, required: true },
+  subscriptionEndDate: { type: Date, required: true },
+  subscriptionRenewalDate: { type: Date, required: true },
+  subscriptionRenewalPrice: { type: Number, required: true },
+  subscriptionRenewalCurrency: { type: String, required: true },
+  subscriptionRenewalPeriod: { type: String, required: true },
+  subscriptionRenewalPeriodUnit: { type: String, required: true },
+  subscriptionRenewalPeriodFrequency: { type: Number, required: true },
+});
 
-const AccessiBeLicenseModel: Model<IAccessiBeLicense> =
-  model<IAccessiBeLicense>("accessiBeLicense", accessiBeLicenseSchema);
-export default AccessiBeLicenseModel;
+export const AccessiBeLicenseModel: Model<IAccessiBeLicense> =
+  model<IAccessiBeLicense>("AccessiBeLicense", AccessiBeLicenseSchema);

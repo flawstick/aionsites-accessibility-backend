@@ -1,33 +1,36 @@
+import { ValidationError } from "express-validator";
 import winston from "winston";
 import "winston-daily-rotate-file";
-
-enum LogLevel {
-  Error = "error",
-  Warn = "warn",
-  Info = "info",
-  Debug = "debug",
-  SysInfo = "sysinfo",
-}
 
 winston.addColors({
   error: "bold red",
   warn: "bold yellow",
   info: "bold green",
   debug: "bold magenta",
-  sysinfo: "bold cyan",
+  verbose: "bold cyan", // Use verbose for system messages
 });
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   winston.format.colorize({ all: true }),
   winston.format.printf(
-    (info) => `${info.timestamp} [${info.level}]: ${info.message}`,
+    (info) =>
+      `${info.timestamp} [${
+        info.level == "verbose" ? "system" : info.level
+      }]: ${info.message}`,
   ),
 );
 
 const logger = winston.createLogger({
-  levels: winston.config.npm.levels,
+  levels: {
+    error: 0,
+    warn: 1,
+    info: 2,
+    debug: 3,
+    verbose: 4, // Include verbose level
+  },
   format: logFormat,
+  level: "verbose", // Set to verbose to include verbose level
   transports: [
     new winston.transports.Console(),
     new winston.transports.DailyRotateFile({
@@ -42,23 +45,26 @@ const logger = winston.createLogger({
 
 export class log {
   static info(message: string) {
-    console.log(message);
+    logger.info(message);
   }
 
   static error(message: string, error?: Error) {
     const errorMsg = error ? `${message} | ${error.stack}` : message;
-    console.log(errorMsg);
+    logger.error(errorMsg);
   }
 
-  static warn(message: string) {
-    console.log(message);
+  static warn(message: string, error?: Error | ValidationError[]) {
+    if (error instanceof Array)
+      logger.warn(`${message} | ${error.map((e) => e.msg).join(", ")}`);
+    else logger.warn(`${message} | ${error}`);
   }
 
   static debug(message: string) {
-    console.log(message);
+    logger.debug(message);
   }
 
   static sysInfo(message: string) {
-    console.log(message);
+    logger.verbose(message); // Use verbose for system messages
   }
 }
+

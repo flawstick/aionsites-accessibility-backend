@@ -22,7 +22,10 @@ export const loggerMiddleware = (
         : chalk.green(res.statusCode.toString());
     const responseTime = chalk.yellow(`${durationInMilliseconds}ms`);
 
-    log.info(`${method} ${url} ${status} - ${responseTime}`);
+    let logStr = `${method} ${url} ${status} - ${responseTime}`;
+    if (logStr.length > 80) logStr = logStr.slice(0, 80) + "...";
+
+    log.sysInfo(logStr);
   });
 
   next();

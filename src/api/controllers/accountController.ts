@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { JwtPayload, verify, sign } from "jsonwebtoken";
-import { config } from "@/config";
 import AccountModel from "@/models/account";
+import { config } from "@/config";
+import { log } from "@/utils/log";
 
 export const getAccount = async (req: Request, res: Response) => {
   const { jwt } = req.params;
@@ -12,6 +13,7 @@ export const getAccount = async (req: Request, res: Response) => {
       config.jwtSecret || "",
     ) as JwtPayload;
     const account: any = await AccountModel.findById(decoded.userId);
+    log.info(`Account ${account.email} retrieved`);
     res.json({ ...account._doc, at_hash: null });
   } catch (error) {
     console.error("Error handling /accounts/:jwt:", error);

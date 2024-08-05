@@ -24,11 +24,17 @@ app.use(express.json());
 app.use(loggerMiddleware);
 app.use(verifyJsonWebToken);
 
-// Routes
-app.use("/auth", authRouter);
-app.use("/accounts", accountRouter);
-app.use("/subscriptions", subscriptionRouter);
-app.use("/upload", uploadRouter);
+// New routes for the accessibility service
+const accessibilityRouter = express.Router();
+
+// Use the router instance to define all routes
+accessibilityRouter.use("/auth", authRouter);
+accessibilityRouter.use("/accounts", accountRouter);
+accessibilityRouter.use("/subscriptions", subscriptionRouter);
+accessibilityRouter.use("/upload", uploadRouter);
+
+// Mount the router instance on the /accessibility path
+app.use("/accessibility", accessibilityRouter);
 
 initializeServices()
   .then(() => {

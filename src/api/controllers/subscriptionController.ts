@@ -9,7 +9,7 @@ export async function createSubscription(
   try {
     const subscriptionData = new AccessiBeLicenseModel(req.body);
     await subscriptionData.save();
-    log.info("Subscription created successfully");
+    log.info(`Subscription created successfully by ${req.body.email}`);
     res.status(201).json({ message: "Subscription created successfully" });
   } catch (error) {
     log.error(error as string);

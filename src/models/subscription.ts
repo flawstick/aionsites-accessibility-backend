@@ -10,6 +10,7 @@ interface ICard {
 
 interface IAccessiBeLicenseBase {
   companyName: string;
+  email: string;
   addresses: string[];
   location?: {
     longitude: number;
